@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.example.kotlinmviarchitecture.models.Post
+import com.example.kotlinmviarchitecture.models.User
 import com.example.kotlinmviarchitecture.ui.main.state.MainStateEvent
 import com.example.kotlinmviarchitecture.ui.main.state.MainViewState
 import com.example.kotlinmviarchitecture.util.AbsentLiveData
@@ -39,6 +41,29 @@ class MainViewModel : ViewModel(){
                 return AbsentLiveData.create()
             }
         }
+    }
+
+    fun getCurrentViewStateOrNew(): MainViewState {
+        val value = viewState.value?.let {
+            it // set it to value
+        }?: MainViewState() // no value so create new one
+        return value;
+    }
+
+    fun setBlogListData(blogPosts: List<Post>){
+        val update = getCurrentViewStateOrNew()
+        update.blogPosts = blogPosts
+        _viewState.value = update
+    }
+
+    fun  setUser(user: User){
+        val update = getCurrentViewStateOrNew()
+        update.user = user
+        _viewState.value = update
+    }
+
+    fun setStateEvent(event: MainStateEvent){
+        _stateEvent.value = event
     }
 
 }
