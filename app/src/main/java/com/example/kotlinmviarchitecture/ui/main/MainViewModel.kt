@@ -10,6 +10,7 @@ import com.example.kotlinmviarchitecture.repository.DataRepository
 import com.example.kotlinmviarchitecture.ui.main.state.MainStateEvent
 import com.example.kotlinmviarchitecture.ui.main.state.MainViewState
 import com.example.kotlinmviarchitecture.util.AbsentLiveData
+import com.example.kotlinmviarchitecture.util.DataState
 
 class MainViewModel : ViewModel(){
 
@@ -19,7 +20,7 @@ class MainViewModel : ViewModel(){
     val viewState: LiveData<MainViewState>
         get() = _viewState
 
-    val dataState: LiveData<MainViewState> = Transformations
+    val dataState: LiveData<DataState<MainViewState>> = Transformations
         .switchMap(_stateEvent){ stateEvent -> // listetning for _stateEvent, if it changes than switchmap will detect that and execute this code:
 
             stateEvent?.let {
@@ -27,7 +28,7 @@ class MainViewModel : ViewModel(){
             }
         }
 
-    fun handleStateEvent(stateEvent: MainStateEvent): LiveData<MainViewState>{
+    fun handleStateEvent(stateEvent: MainStateEvent): LiveData<DataState<MainViewState>>{
         when(stateEvent){
             is MainStateEvent.GetBlogPostsEvent -> {
                 return DataRepository.getBlogPosts()

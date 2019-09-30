@@ -7,28 +7,36 @@ import com.example.kotlinmviarchitecture.ui.main.state.MainViewState
 import com.example.kotlinmviarchitecture.util.ApiEmptyResponse
 import com.example.kotlinmviarchitecture.util.ApiErrorResponse
 import com.example.kotlinmviarchitecture.util.ApiSuccessResponse
+import com.example.kotlinmviarchitecture.util.DataState
 
 object DataRepository {
 
-    fun getBlogPosts(): LiveData<MainViewState> {
+    fun getBlogPosts(): LiveData<DataState<MainViewState>> {
         return Transformations
             .switchMap(RetrofitBuilder.apiService.getBlogPosts()){ response ->
-                object: LiveData<MainViewState>() {
+                object: LiveData<DataState<MainViewState>>() {
                     override fun onActive() {
                         super.onActive()
                         when(response) {
                             is ApiSuccessResponse -> {
-                                value = MainViewState(
-                                    blogPosts = response.body
+                                value = DataState.data(
+                                    message = null,
+                                    data = MainViewState(
+                                        blogPosts = response.body
+                                    )
                                 )
                             }
 
                             is ApiErrorResponse -> {
-                                value = MainViewState() // handle error?
+                                value = DataState.error(
+                                    message = response.errorMessage
+                                )
                             }
 
                             is ApiEmptyResponse -> {
-                                value = MainViewState() // handle empty/error?
+                                value = DataState.data(
+                                    message = "HTTO 204. Returned nothing"
+                                )
                             }
                         }
                     }
@@ -36,25 +44,32 @@ object DataRepository {
             }
     }
 
-    fun getUser(userId: String): LiveData<MainViewState> {
+    fun getUser(userId: String): LiveData<DataState<MainViewState>> {
         return Transformations
             .switchMap(RetrofitBuilder.apiService.getUser(userId)){ response ->
-                object: LiveData<MainViewState>() {
+                object: LiveData<DataState<MainViewState>>() {
                     override fun onActive() {
                         super.onActive()
                         when(response) {
                             is ApiSuccessResponse -> {
-                                value = MainViewState(
-                                    user = response.body
+                                value = DataState.data(
+                                    message = null,
+                                    data = MainViewState(
+                                        user = response.body
+                                    )
                                 )
                             }
 
                             is ApiErrorResponse -> {
-                                value = MainViewState() // handle error?
+                                value = DataState.error(
+                                    message = response.errorMessage
+                                )
                             }
 
                             is ApiEmptyResponse -> {
-                                value = MainViewState() // handle empty/error?
+                                value = DataState.data(
+                                    message = "HTTO 204. Returned nothing"
+                                )
                             }
                         }
                     }
