@@ -1,5 +1,6 @@
 package com.example.kotlinmviarchitecture.api
 
+import com.example.kotlinmviarchitecture.util.LiveDataCallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -9,6 +10,7 @@ object RetrofitBuilder { // thats how we create Singleton
         Retrofit.Builder()
             .baseUrl("https://open-api.xyz/")
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(LiveDataCallAdapterFactory())
     }
 
     val apiService: ApiService by lazy {
