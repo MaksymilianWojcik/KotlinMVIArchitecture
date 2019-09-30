@@ -3,77 +3,44 @@ package com.example.kotlinmviarchitecture.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.example.kotlinmviarchitecture.api.RetrofitBuilder
+import com.example.kotlinmviarchitecture.models.Post
+import com.example.kotlinmviarchitecture.models.User
 import com.example.kotlinmviarchitecture.ui.main.state.MainViewState
-import com.example.kotlinmviarchitecture.util.ApiEmptyResponse
-import com.example.kotlinmviarchitecture.util.ApiErrorResponse
-import com.example.kotlinmviarchitecture.util.ApiSuccessResponse
-import com.example.kotlinmviarchitecture.util.DataState
+import com.example.kotlinmviarchitecture.util.*
 
 object DataRepository {
 
     fun getBlogPosts(): LiveData<DataState<MainViewState>> {
-        return Transformations
-            .switchMap(RetrofitBuilder.apiService.getBlogPosts()){ response ->
-                object: LiveData<DataState<MainViewState>>() {
-                    override fun onActive() {
-                        super.onActive()
-                        when(response) {
-                            is ApiSuccessResponse -> {
-                                value = DataState.data(
-                                    message = null,
-                                    data = MainViewState(
-                                        blogPosts = response.body
-                                    )
-                                )
-                            }
+        return object: NetworkBoundResource<List<Post>, MainViewState>(){
 
-                            is ApiErrorResponse -> {
-                                value = DataState.error(
-                                    message = response.errorMessage
-                                )
-                            }
-
-                            is ApiEmptyResponse -> {
-                                value = DataState.data(
-                                    message = "HTTO 204. Returned nothing"
-                                )
-                            }
-                        }
-                    }
-                }
+            override fun handleApiSuccessResponse(response: ApiSuccessResponse<List<Post>>) {
+                result.value = DataState.data(
+                   data = MainViewState(
+                        blogPosts = response.body
+                    )
+                )
             }
+
+            override fun createCall(): LiveData<GenericApiResponse<List<Post>>> {
+                return RetrofitBuilder.apiService.getBlogPosts()
+            }
+        }.asLiveData()
     }
 
     fun getUser(userId: String): LiveData<DataState<MainViewState>> {
-        return Transformations
-            .switchMap(RetrofitBuilder.apiService.getUser(userId)){ response ->
-                object: LiveData<DataState<MainViewState>>() {
-                    override fun onActive() {
-                        super.onActive()
-                        when(response) {
-                            is ApiSuccessResponse -> {
-                                value = DataState.data(
-                                    message = null,
-                                    data = MainViewState(
-                                        user = response.body
-                                    )
-                                )
-                            }
+        return object: NetworkBoundResource<User, MainViewState>(){
 
-                            is ApiErrorResponse -> {
-                                value = DataState.error(
-                                    message = response.errorMessage
-                                )
-                            }
-
-                            is ApiEmptyResponse -> {
-                                value = DataState.data(
-                                    message = "HTTO 204. Returned nothing"
-                                )
-                            }
-                        }
-                    }
-                }
+            override fun handleApiSuccessResponse(response: ApiSuccessResponse<User>) {
+                result.value = DataState.data(
+                    data = MainViewState(
+                        user = response.body
+                    )
+                )
             }
+
+            override fun createCall(): LiveData<GenericApiResponse<User>> {
+                return RetrofitBuilder.apiService.getUser(userId)
+            }
+        }.asLiveData()
     }
 }
