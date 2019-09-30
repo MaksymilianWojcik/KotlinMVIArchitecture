@@ -1,7 +1,8 @@
-package com.example.kotlinmviarchitecture
+package com.example.kotlinmviarchitecture.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.kotlinmviarchitecture.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,7 +12,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showMainFragment(){
-        val mainFragment:MainFragment = MainFragment();
+        val mainFragment: MainFragment =
+            MainFragment();
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, mainFragment, "MainFragment")
             .commit();

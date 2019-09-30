@@ -1,8 +1,9 @@
-package com.example.kotlinmviarchitecture
+package com.example.kotlinmviarchitecture.main
 
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import com.example.kotlinmviarchitecture.R
 
 class MainFragment: Fragment() {
 
