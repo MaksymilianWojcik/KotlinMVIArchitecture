@@ -1,4 +1,4 @@
-package com.example.kotlinmviarchitecture.main
+package com.example.kotlinmviarchitecture.ui.main
 
 import android.os.Bundle
 import android.view.*
